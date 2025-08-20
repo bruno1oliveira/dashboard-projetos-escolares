@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Projetos Escolares Caraguatatuba</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-school"></i> Dashboard - Projetos Escolares</h1>
+                <p>Caraguatatuba - 2º Semestre 2025</p>
+                <div class="last-update">
+                    <i class="fas fa-clock"></i>
+                    <span id="lastUpdate">Carregando...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="loading">
+            <div class="spinner"></div>
+            <p>Carregando dados...</p>
+        </div>
+
+        <!-- Main Content -->
+        <main id="mainContent" style="display: none;">
+            <!-- Metrics Cards -->
+            <section class="metrics-section">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-school"></i>
+                        </div>
+                        <div class="metric-content">
+                            <h3 id="totalSchools">0</h3>
+                            <p>Total de Escolas</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon active">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <div class="metric-content">
+                            <h3 id="activeProjects">0</h3>
+                            <p>Escolas com Projetos Ativos</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon integral">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="metric-content">
+                            <h3 id="integralSchools">0</h3>
+                            <p>Escolas Período Integral</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon partnership">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div class="metric-content">
+                            <h3 id="partnerships">0</h3>
+                            <p>Escolas com Parcerias</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Filters and Search -->
+            <section class="filters-section">
+                <div class="filters-container">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Buscar escola por nome...">
+                    </div>
+                    <div class="filter-group">
+                        <label for="schoolTypeFilter">Tipo de Escola:</label>
+                        <select id="schoolTypeFilter">
+                            <option value="">Todos os tipos</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="projectStatusFilter">Status dos Projetos:</label>
+                        <select id="projectStatusFilter">
+                            <option value="">Todos</option>
+                            <option value="sim">Com Projetos Ativos</option>
+                            <option value="nao">Sem Projetos Ativos</option>
+                        </select>
+                    </div>
+                    <button id="clearFilters" class="btn-clear">
+                        <i class="fas fa-times"></i> Limpar Filtros
+                    </button>
+                    <button id="exportData" class="btn-export">
+                        <i class="fas fa-download"></i> Exportar CSV
+                    </button>
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <section class="charts-section">
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>Distribuição de Projetos Ativos</h3>
+                        <canvas id="projectsChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Escolas com Período Integral</h3>
+                        <canvas id="integralChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Tipos de Parcerias</h3>
+                        <canvas id="partnershipsChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Tipos de Escolas</h3>
+                        <canvas id="schoolTypesChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Comparison Panel -->
+            <section id="comparisonPanel" class="comparison-panel" style="display: none;">
+                <div class="comparison-header">
+                    <h2><i class="fas fa-balance-scale"></i> Comparação de Escolas</h2>
+                    <div class="comparison-controls">
+                        <span id="selectedCount">0 escolas selecionadas</span>
+                        <button id="clearSelection" class="btn-clear-selection">
+                            <i class="fas fa-times"></i> Limpar Seleção
+                        </button>
+                        <button id="exportComparison" class="btn-export-comparison">
+                            <i class="fas fa-download"></i> Exportar Comparação
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="comparison-content">
+                    <!-- Comparison Charts -->
+                    <div class="comparison-charts">
+                        <div class="comparison-chart-container">
+                            <h3>Projetos Ativos por Escola</h3>
+                            <canvas id="comparisonProjectsChart"></canvas>
+                        </div>
+                        <div class="comparison-chart-container">
+                            <h3>Características das Escolas</h3>
+                            <canvas id="comparisonFeaturesChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Detailed Comparison Table -->
+                    <div class="comparison-table-container">
+                        <h3>Comparação Detalhada</h3>
+                        <div class="table-wrapper">
+                            <table id="comparisonTable" class="comparison-table">
+                                <thead>
+                                    <tr>
+                                        <th>Característica</th>
+                                        <!-- School columns will be added dynamically -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Comparison rows will be added dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Schools List -->
+            <section class="schools-section">
+                <div class="section-header">
+                    <h2>Unidades Escolares</h2>
+                    <div class="section-controls">
+                        <div class="results-count">
+                            <span id="resultsCount">0 escolas encontradas</span>
+                        </div>
+                        <div class="selection-controls">
+                            <button id="selectAll" class="btn-select-all">
+                                <i class="fas fa-check-square"></i> Selecionar Todas
+                            </button>
+                            <button id="deselectAll" class="btn-deselect-all">
+                                <i class="fas fa-square"></i> Desmarcar Todas
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="schoolsList" class="schools-grid">
+                    <!-- School cards will be populated here -->
+                </div>
+            </section>
+        </main>
+
+        <!-- School Detail Modal -->
+        <div id="schoolModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modalSchoolName">Nome da Escola</h2>
+                    <button class="modal-close" onclick="closeSchoolModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-tabs">
+                        <button class="tab-btn active" onclick="switchTab('general')">Informações Gerais</button>
+                        <button class="tab-btn" onclick="switchTab('projects')">Projetos</button>
+                        <button class="tab-btn" onclick="switchTab('partnerships')">Parcerias</button>
+                        <button class="tab-btn" onclick="switchTab('integral')">Período Integral</button>
+                    </div>
+                    
+                    <div class="modal-tab-content">
+                        <!-- General Tab -->
+                        <div id="generalTab" class="tab-content active">
+                            <div class="info-grid">
+                                <div class="info-section">
+                                    <h3><i class="fas fa-info-circle"></i> Dados Básicos</h3>
+                                    <div class="info-item">
+                                        <label>Nome da Escola:</label>
+                                        <span id="modalSchoolFullName"></span>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>Tipo:</label>
+                                        <span id="modalSchoolType"></span>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>Responsável:</label>
+                                        <span id="modalResponsible"></span>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>Data de Preenchimento:</label>
+                                        <span id="modalTimestamp"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="info-section">
+                                    <h3><i class="fas fa-chart-line"></i> Status</h3>
+                                    <div class="status-grid">
+                                        <div class="status-item">
+                                            <i class="fas fa-project-diagram"></i>
+                                            <span>Projetos Ativos</span>
+                                            <span id="modalHasProjects" class="status-value"></span>
+                                        </div>
+                                        <div class="status-item">
+                                            <i class="fas fa-clock"></i>
+                                            <span>Período Integral</span>
+                                            <span id="modalHasIntegral" class="status-value"></span>
+                                        </div>
+                                        <div class="status-item">
+                                            <i class="fas fa-handshake"></i>
+                                            <span>Parcerias</span>
+                                            <span id="modalHasPartnerships" class="status-value"></span>
+                                        </div>
+                                        <div class="status-item">
+                                            <i class="fas fa-calendar-plus"></i>
+                                            <span>Projetos Futuros</span>
+                                            <span id="modalFuturePlans" class="status-value"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Projects Tab -->
+                        <div id="projectsTab" class="tab-content">
+                            <div class="projects-section">
+                                <div class="project-group">
+                                    <h3><i class="fas fa-list"></i> Projetos Ativos</h3>
+                                    <div class="project-content" id="modalActiveProjects"></div>
+                                    <div class="project-meta">
+                                        <strong>Início dos Projetos:</strong> <span id="modalProjectStartDate"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="project-group">
+                                    <h3><i class="fas fa-users"></i> Projetos para Comunidade</h3>
+                                    <div class="project-content" id="modalCommunityProjects"></div>
+                                </div>
+                                
+                                <div class="project-group">
+                                    <h3><i class="fas fa-child"></i> Projetos para Crianças</h3>
+                                    <div class="project-content" id="modalChildrenProjects"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Partnerships Tab -->
+                        <div id="partnershipsTab" class="tab-content">
+                            <div class="partnerships-section">
+                                <h3><i class="fas fa-handshake"></i> Parcerias Ativas</h3>
+                                <div class="partnership-content" id="modalPartnerships"></div>
+                            </div>
+                        </div>
+
+                        <!-- Integral Tab -->
+                        <div id="integralTab" class="tab-content">
+                            <div class="integral-section">
+                                <div class="integral-group">
+                                    <h3><i class="fas fa-graduation-cap"></i> Anos Atendidos</h3>
+                                    <div class="integral-content" id="modalIntegralYears"></div>
+                                </div>
+                                
+                                <div class="integral-group">
+                                    <h3><i class="fas fa-project-diagram"></i> Projetos do Período Integral</h3>
+                                    <div class="integral-content" id="modalIntegralProjects"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-modal-export" onclick="exportSchoolDetails()">
+                        <i class="fas fa-download"></i> Exportar Detalhes
+                    </button>
+                    <button class="btn-modal-close" onclick="closeSchoolModal()">
+                        Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
