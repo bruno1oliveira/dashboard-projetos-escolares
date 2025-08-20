@@ -55,14 +55,14 @@ dashboard-projetos-escolares/
 ### Instalação Local
 1. Clone o repositório:
 ```bash
-git clone https://github.com/seu-usuario/dashboard-projetos-escolares.git
+git clone https://github.com/bruno1oliveira/dashboard-projetos-escolares.git
 cd dashboard-projetos-escolares
 ```
 
 2. Abra o arquivo `index.html` em um navegador web moderno
 
 ### Uso Online
-Acesse diretamente via GitHub Pages: [Link do Dashboard](https://seu-usuario.github.io/dashboard-projetos-escolares/)
+Acesse diretamente via GitHub Pages: [Dashboard Projetos Escolares](https://bruno1oliveira.github.io/dashboard-projetos-escolares/)
 
 ## 📊 Como Usar o Dashboard
 
@@ -157,7 +157,7 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para de
 
 ## 👥 Autores
 
-- **Desenvolvedor Principal** - *Desenvolvimento inicial* - [Seu GitHub](https://github.com/seu-usuario)
+- **Bruno Oliveira** - *Desenvolvimento inicial* - [GitHub](https://github.com/bruno1oliveira)
 
 ## 🙏 Agradecimentos
 
