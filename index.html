@@ -100,6 +100,9 @@
                     <button id="exportData" class="btn-export">
                         <i class="fas fa-download"></i> Exportar CSV
                     </button>
+                    <button id="addSchool" class="btn-add">
+                        <i class="fas fa-plus"></i> Adicionar Escola
+                    </button>
                 </div>
             </section>
 
@@ -196,6 +199,95 @@
                 </div>
             </section>
         </main>
+
+        <!-- Add School Modal -->
+        <div id="addSchoolModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-plus"></i> Adicionar Nova Escola</h2>
+                    <button class="modal-close" onclick="closeAddSchoolModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addSchoolForm" class="add-school-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="newSchoolName">Nome da Escola *</label>
+                                <input type="text" id="newSchoolName" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="newResponsible">Responsável *</label>
+                                <input type="text" id="newResponsible" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="newHasProjects">Possui Projetos Ativos?</label>
+                                <select id="newHasProjects">
+                                    <option value="Sim">Sim</option>
+                                    <option value="Não">Não</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="newHasIntegral">Possui Período Integral?</label>
+                                <select id="newHasIntegral">
+                                    <option value="Não">Não</option>
+                                    <option value="Sim">Sim</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="newActiveProjects">Projetos Ativos</label>
+                                <textarea id="newActiveProjects" rows="3" placeholder="Descreva os projetos ativos da escola..."></textarea>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="newCommunityProjects">Projetos para Comunidade</label>
+                                <textarea id="newCommunityProjects" rows="3" placeholder="Descreva os projetos destinados à comunidade..."></textarea>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="newChildrenProjects">Projetos para Crianças</label>
+                                <textarea id="newChildrenProjects" rows="3" placeholder="Descreva os projetos destinados às crianças..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="newHasPartnerships">Possui Parcerias?</label>
+                                <select id="newHasPartnerships">
+                                    <option value="Não">Não</option>
+                                    <option value="Sim">Sim</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="newPartnerships">Parcerias</label>
+                                <input type="text" id="newPartnerships" placeholder="Ex: SEDUC, Petrobrás, FUNDACC...">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="newIntegralYears">Anos Atendidos (Integral)</label>
+                                <input type="text" id="newIntegralYears" placeholder="Ex: 1° ANO, 2° ANO, 3° ANO...">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="newProjectStartDate">Início dos Projetos</label>
+                                <input type="text" id="newProjectStartDate" placeholder="Ex: Março 2025, Início do ano letivo...">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal-close" onclick="closeAddSchoolModal()">
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn-modal-save" onclick="saveNewSchool()">
+                        <i class="fas fa-save"></i> Salvar Escola
+                    </button>
+                </div>
+            </div>
+        </div>
 
         <!-- School Detail Modal -->
         <div id="schoolModal" class="modal" style="display: none;">
